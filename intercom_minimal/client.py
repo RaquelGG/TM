@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import sounddevice as sd
 from udp_send import UdpSender
 import numpy
