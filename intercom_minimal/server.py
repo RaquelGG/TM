@@ -23,8 +23,7 @@ def play(chunk, stream):
 
         stream : sd.RawStream
             Raw stream for playback and recording.
-
-    """
+        """
     stream.write(chunk)
     print("Received chunk")
     print(chunk)
