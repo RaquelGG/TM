@@ -69,7 +69,7 @@ def server():
     CHUNK_SIZE = 64
     DESTINATION = 'localhost'
     stream = sd.RawStream(samplerate=44100, channels=2, dtype='int16')
-
+    stream.start()
     with UdpSender() as sender:
         while True:
             chunk = record(CHUNK_SIZE, stream)
