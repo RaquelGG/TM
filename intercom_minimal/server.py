@@ -11,6 +11,20 @@ def unpack(packed_chunk):
     return packed_chunk
 
 def play(chunk, stream):
+    """Write samples to the stream.
+
+        Parameters
+        ----------
+        chunk : buffer
+            A buffer of interleaved samples. The buffer contains
+            samples in the format specified by the *dtype* parameter
+            used to open the stream, and the number of channels
+            specified by *channels*.
+
+        stream : sd.RawStream
+            Raw stream for playback and recording.
+
+    """
     stream.write(chunk)
     print("Received chunk")
     print(chunk)

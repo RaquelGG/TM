@@ -5,14 +5,32 @@ import numpy
 assert numpy
 
 def record(chunk_size, stream):
-    stream.start()
+    """Record a chunk from the stream into a buffer.
+
+        Parameters
+        ----------
+        chunk_size : int
+            The number of frames to be read.
+
+        stream : buffer
+            Raw stream for playback and recording.
+
+        Returns
+        -------
+        chunk : sd.RawStream
+            A buffer of interleaved samples. The buffer contains
+            samples in the format specified by the *dtype* parameter
+            used to open the stream, and the number of channels
+            specified by *channels*.
+        """
+
     chunk, _ = stream.read(chunk_size)
     return chunk
         
 def pack(chunk):
-    '''
+    """
     TODO 
-    '''
+    """
     return chunk
 
 if __name__ == "__main__":
