@@ -5,81 +5,96 @@ from udp_receive import UdpReceiver
 import numpy
 assert numpy
 
-def record(chunk_size, stream):
-    """Record a chunk from the stream into a buffer.
+class InterCom():
+    # Audio defaults
+    # 1 = mono, 2 = stereo
+    NUMBER_OF_CHANNELS = 2
+    FRAMES_PER_SECOND  = 44100
+    FRAMES_PER_CHUNK   = 1000
+    
+    # Network defaults
+    PAYLOAD_SIZE = 1024
+    IN_PORT     = 4444
+    OUT_PORT    = 4444
+    ADDRESS     = 'localhost'
 
-        Parameters
-        ----------
-        chunk_size : int
-            The number of frames to be read.
+    lock = threading.Lock()
 
-        stream : buffer
-            Raw stream for playback and recording.
+    def record(self, chunk_size, stream):
+        """Record a chunk from the stream into a buffer.
 
-        Returns
-        -------
-        chunk : sd.RawStream
-            A buffer of interleaved samples. The buffer contains
-            samples in the format specified by the *dtype* parameter
-            used to open the stream, and the number of channels
-            specified by *channels*.
-        """
+            Parameters
+            ----------
+            chunk_size : int
+                The number of frames to be read.
 
-    chunk, _ = stream.read(chunk_size)
-    return chunk
-        
-def pack(chunk):
-    """TODO
-        """
-    return chunk
+            stream : buffer
+                Raw stream for playback and recording.
 
-def unpack(packed_chunk):
-    """TODO
-        """
-    return packed_chunk
+            Returns
+            -------
+            chunk : sd.RawStream
+                A buffer of interleaved samples. The buffer contains
+                samples in the format specified by the *dtype* parameter
+                used to open the stream, and the number of channels
+                specified by *channels*.
+            """
 
-def play(chunk, stream):
-    """Write samples to the stream.
+        chunk, _ = stream.read(chunk_size)
+        return chunk
+            
+    def pack(self, chunk):
+        """TODO
+            """
+        return chunk
 
-        Parameters
-        ----------
-        chunk : buffer
-            A buffer of interleaved samples. The buffer contains
-            samples in the format specified by the *dtype* parameter
-            used to open the stream, and the number of channels
-            specified by *channels*.
+    def unpack(self, packed_chunk):
+        """TODO
+            """
+        return packed_chunk
 
-        stream : sd.RawStream
-            Raw stream for playback and recording.
-        """
-    stream.write(chunk)
-    print("Received chunk")
-    print(chunk)
+    def play(self, chunk, stream):
+        """Write samples to the stream.
 
-def client():
-    stream = sd.RawStream(samplerate=44100, channels=2, dtype='int16')
-    stream.start()
-    with UdpReceiver() as receiver:
-        while True:
-            packed_chunk = receiver.receive()
-            chunk = unpack(packed_chunk)
-            play(chunk, stream)
+            Parameters
+            ----------
+            chunk : buffer
+                A buffer of interleaved samples. The buffer contains
+                samples in the format specified by the *dtype* parameter
+                used to open the stream, and the number of channels
+                specified by *channels*.
 
-def server():
-    CHUNK_SIZE = 64
-    DESTINATION = 'localhost'
-    stream = sd.RawStream(samplerate=44100, channels=2, dtype='int16')
-    stream.start()
-    with UdpSender() as sender:
-        while True:
-            chunk = record(CHUNK_SIZE, stream)
-            packed_chunk = pack(chunk)
-            sender.send(packed_chunk, DESTINATION)
+            stream : sd.RawStream
+                Raw stream for playback and recording.
+            """
+        stream.write(chunk)
 
+    def client(self):
+        stream = sd.RawStream(samplerate=self.FRAMES_PER_SECOND, channels=self.NUMBER_OF_CHANNELS, dtype='int16')
+        stream.start()
+        with UdpReceiver() as receiver:
+            while True:
+                packed_chunk = receiver.receive()
+                chunk = self.unpack(packed_chunk)
+                self.lock.acquire()
+                self.play(chunk, stream)
+                self.lock.release()
+
+    def server(self):
+        stream = sd.RawStream(samplerate=self.FRAMES_PER_SECOND, channels=self.NUMBER_OF_CHANNELS, dtype='int16')
+        stream.start()
+        with UdpSender() as sender:
+            while True:
+                self.lock.acquire()
+                chunk = self.record(self.FRAMES_PER_CHUNK, stream)
+                self.lock.release()
+                packed_chunk = self.pack(chunk)
+                sender.send(packed_chunk, self.OUT_PORT, self.ADDRESS)
 
 if __name__ == "__main__":
-    client = threading.Thread(target=client)
-    server = threading.Thread(target=server)
+    intercom = InterCom()
+    clientT = threading.Thread(target=intercom.client)
+    serverT = threading.Thread(target=intercom.server)
 
-    client.start()
-    server.start()
+    clientT.start()
+    serverT.start()
