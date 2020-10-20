@@ -55,3 +55,24 @@ def play(self, chunk, stream):
             """
         stream.write(chunk)
 ```
+
+## Cosas a destacar sobre la implementación
+Se ha usado la biblioteca [`sounddevice`](https://python-sounddevice.readthedocs.io/en/0.4.1/) para la captura y reproducción del audio.
+### RawInputStream y RawOutputStream
+[`RawInputStrea`](https://python-sounddevice.readthedocs.io/en/0.4.1/api/raw-streams.html#sounddevice.RawInputStream) gestiona los dispositivos de entrada de nuestro dispositivo y [`RawOutputStrea`](https://python-sounddevice.readthedocs.io/en/0.4.1/api/raw-streams.html#sounddevice.RawOutputStream) los de salida.
+```python
+stream = sd.RawInputStream(samplerate=self.frames_per_second, channels=self.number_of_channels, dtype='int16')
+...
+stream = sd.RawOutputStream(samplerate=self.frames_per_second, channels=self.number_of_channels, dtype='int16')
+```
+Como tratamos la entrada y la salida totalmente por separado, no es necesario realizar exclusión mutua.
+
+### Hilos
+Usamos la biblioteca [`threading`](https://docs.python.org/3.8/library/threading.html) que construye interfaces de subprocesamiento de nivel superior sobre el módulo `_thread` de nivel inferior.
+
+```python
+import threading
+... 
+clientT = threading.Thread(target=intercom.client)
+clientT.start()
+```
