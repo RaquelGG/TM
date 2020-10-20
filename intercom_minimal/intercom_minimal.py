@@ -3,13 +3,10 @@ import threading
 from udp_send import UdpSender
 from udp_receive import UdpReceiver
 from disponible_args import disponible_args, show_args
-import numpy
-assert numpy
+#import numpy # Por ahora no usaremos numpy porque no le sacaremos provecho
+#assert numpy
 
 class InterCom():
-
-    lock = threading.Lock()
-
     def __init__(self, args):
         # audio args
         self.number_of_channels = args.number_of_channels
@@ -77,28 +74,24 @@ class InterCom():
     def client(self):
         """ Receive a chunk from ```in_port``` and plays it.
             """
-        stream = sd.RawStream(samplerate=self.frames_per_second, channels=self.number_of_channels, dtype='int16')
+        stream = sd.RawInputStream(samplerate=self.frames_per_second, channels=self.number_of_channels, dtype='int16')
+        stream.start()
+        with UdpSender() as sender:
+            while True:
+                chunk = self.record(self.frames_per_chunk, stream)
+                packed_chunk = self.pack(chunk)
+                sender.send(packed_chunk, self.out_port, self.address)
+
+    def server(self):
+        """ Record a chunk with size ```frames_per_chunk``` and sends it through ```address``` and ```out_port```
+            """
+        stream = sd.RawOutputStream(samplerate=self.frames_per_second, channels=self.number_of_channels, dtype='int16')
         stream.start()
         with UdpReceiver(self.in_port) as receiver:
             while True:
                 packed_chunk = receiver.receive(self.payload_size)
                 chunk = self.unpack(packed_chunk)
-                self.lock.acquire()
                 self.play(chunk, stream)
-                self.lock.release()
-
-    def server(self):
-        """ Record a chunk with size ```frames_per_chunk``` and sends it through ```address``` and ```out_port```
-            """
-        stream = sd.RawStream(samplerate=self.frames_per_second, channels=self.number_of_channels, dtype='int16')
-        stream.start()
-        with UdpSender() as sender:
-            while True:
-                self.lock.acquire()
-                chunk = self.record(self.frames_per_chunk, stream)
-                self.lock.release()
-                packed_chunk = self.pack(chunk)
-                sender.send(packed_chunk, self.out_port, self.address)
 
 if __name__ == "__main__":
     # Get args
