@@ -9,7 +9,7 @@ En python existe una guía de buenas practicas, denominada [PEP-0008](https://ww
 
 
 ### Clases
-Las clases deben utilizar por convención el formato "CapWords", palabras que siempre comienzan con mayusculas. [PEP-0008](https://www.python.org/dev/peps/pep-0008/#class-names).
+Las clases deben utilizar por convención el formato PascalCase (o UpperCamelCase), palabras que siempre comienzan con mayusculas. [PEP-0008](https://www.python.org/dev/peps/pep-0008/#class-names).
 
 ```python
 class UdpReceiver():
@@ -18,7 +18,7 @@ class UdpReceiver():
 
 
 ### Métodos y variables
-Los nombres de los métodos y las instancias de las variables usan `_` (barrabaja) entre las palabras, siendo el número de estas las necesarias para su comprensión. En el caso de los métodos y varibales no públicas se usará una única `_`. Generalmente solo se usarán dos `__` para evitar conflictos de nombres con los atributos de las clases que han sido creadas para ser subclases. 
+Los nombres de los métodos y las instancias de las variables usan snake_case, `_` (barrabaja) entre las palabras, siendo el número de estas las necesarias para su comprensión. En el caso de los métodos y varibales no públicas se usará una única `_`. Generalmente solo se usarán dos `__` para evitar conflictos de nombres con los atributos de las clases que han sido creadas para ser subclases. 
 ```python
 def disponible_args():
     NUMBER_OF_CHANNELS = 2
