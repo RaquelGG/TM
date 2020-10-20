@@ -55,6 +55,7 @@ def play(self, chunk, stream):
             """
         stream.write(chunk)
 ```
+![Ejemplo de uso de docstring](https://github.com/RaquelGG/TM/blob/master/otros/docstring.gif)
 
 ## Cosas a destacar sobre la implementación
 Se ha usado la biblioteca [`sounddevice`](https://python-sounddevice.readthedocs.io/en/0.4.1/) para la captura y reproducción del audio.
