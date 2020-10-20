@@ -39,7 +39,7 @@ def disponible_args():
     return parser
 
 
-def showArgs(args):
+def show_args(args):
     print("NUMBER OF CHANNELS:", args.number_of_channels)
     print("FRAMES PER SECOND:", args.frames_per_second)
     print("FRAMES PER CHUNK:", args.frames_per_chunk)

@@ -2,7 +2,7 @@ import sounddevice as sd
 import threading
 from udp_send import UdpSender
 from udp_receive import UdpReceiver
-from disponible_args import disponible_args, showArgs
+from disponible_args import disponible_args, show_args
 import numpy
 assert numpy
 
@@ -22,7 +22,7 @@ class InterCom():
         self.out_port     = args.out_port
         self.address      = args.address
 
-        showArgs(args)
+        show_args(args)
 
     
     def record(self, chunk_size, stream):
