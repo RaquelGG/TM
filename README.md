@@ -1,7 +1,7 @@
 # Tecnologías multimedia
 Proyecto de tecnologías multimedia consistente en un interfono cliente/servidor que empaqueta trozos de audio, los envía por UDP y los reproduce con la menor latencia posible.
 
-## Guia de buenas practicas utilizadas para la realización del hito
+## Guia de buenas practicas utilizadas
 
 El uso de buenas practicas permite a los diferentes usuarios ya sean o no parte de nuestro proyecto tener una mayor compresión sobre su contenido evitando rompeduras de cabeza innecesarias.
 
