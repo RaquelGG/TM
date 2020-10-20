@@ -26,7 +26,7 @@ class InterCom():
 
     
     def record(self, chunk_size, stream):
-        """Record a chunk from the stream into a buffer.
+        """Record a chunk from the ```stream``` into a buffer.
 
             Parameters
             ----------
@@ -75,17 +75,21 @@ class InterCom():
         stream.write(chunk)
 
     def client(self):
+        """ Receive a chunk from ```in_port``` and plays it.
+            """
         stream = sd.RawStream(samplerate=self.frames_per_second, channels=self.number_of_channels, dtype='int16')
         stream.start()
-        with UdpReceiver() as receiver:
+        with UdpReceiver(self.in_port) as receiver:
             while True:
-                packed_chunk = receiver.receive()
+                packed_chunk = receiver.receive(self.payload_size)
                 chunk = self.unpack(packed_chunk)
                 self.lock.acquire()
                 self.play(chunk, stream)
                 self.lock.release()
 
     def server(self):
+        """ Record a chunk with size ```frames_per_chunk``` and sends it through ```address``` and ```out_port```
+            """
         stream = sd.RawStream(samplerate=self.frames_per_second, channels=self.number_of_channels, dtype='int16')
         stream.start()
         with UdpSender() as sender:

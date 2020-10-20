@@ -8,7 +8,7 @@ def disponible_args():
     FRAMES_PER_CHUNK   = 1000
     
     # Network defaults
-    PAYLOAD_SIZE = 1024
+    PAYLOAD_SIZE = 10240
     IN_PORT     = 4444
     OUT_PORT    = 4444
     ADDRESS     = 'localhost'

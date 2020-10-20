@@ -7,9 +7,9 @@ class UdpSender():
         print("socket created")
         return self
 
-    def send(self, message, port, destination):
+    def send(self, message, out_port, destination):
         """Send data."""
-        self.sock.sendto(message, (destination, port))
+        self.sock.sendto(message, (destination, out_port))
         #print(f"message {message} sent to destination {destination}")
 
     def __exit__(self,ext_type,exc_value,traceback):
