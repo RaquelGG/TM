@@ -31,8 +31,7 @@ El convenio define las lineas de documentación como "docstrings" y deben de ser
 
 Todo el contenido que se utilice como "docstring" debe de aparecer debajo de la linea "def", el formato para hacerlo es usar """triples comillas""". Existen dos formas de usar "docstring":
 -   En una sola linea
--   En varias lineas
-···Al inicio del "docstringt" aparecera una linea de resumen siguiendo las 3 comillas o en la siguiente linea, pero tras ella se dejara una linea en blanco, seguido por una descripción más elaborada. 
+-   En varias lineas: Al inicio del "docstringt" aparecera una linea de resumen siguiendo las 3 comillas o en la siguiente linea, pero tras ella se dejara una linea en blanco, seguido por una descripción más elaborada.
 
 
 
