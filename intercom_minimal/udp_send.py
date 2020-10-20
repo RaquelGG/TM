@@ -10,7 +10,7 @@ class UdpSender():
     def send(self, message, port, destination):
         """Send data."""
         self.sock.sendto(message, (destination, port))
-        print(f"message {message} sent to destination {destination}")
+        #print(f"message {message} sent to destination {destination}")
 
     def __exit__(self,ext_type,exc_value,traceback):
         """Close the socket."""

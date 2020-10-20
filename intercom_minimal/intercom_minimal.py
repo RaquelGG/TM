@@ -2,24 +2,29 @@ import sounddevice as sd
 import threading
 from udp_send import UdpSender
 from udp_receive import UdpReceiver
+from disponible_args import disponible_args, showArgs
 import numpy
 assert numpy
 
 class InterCom():
-    # Audio defaults
-    # 1 = mono, 2 = stereo
-    NUMBER_OF_CHANNELS = 2
-    FRAMES_PER_SECOND  = 44100
-    FRAMES_PER_CHUNK   = 1000
-    
-    # Network defaults
-    PAYLOAD_SIZE = 1024
-    IN_PORT     = 4444
-    OUT_PORT    = 4444
-    ADDRESS     = 'localhost'
 
     lock = threading.Lock()
 
+    def __init__(self, args):
+        # audio args
+        self.number_of_channels = args.number_of_channels
+        self.frames_per_second  = args.frames_per_second
+        self.frames_per_chunk   = args.frames_per_chunk
+    
+        # network args
+        self.payload_size = args.payload_size
+        self.in_port      = args.in_port
+        self.out_port     = args.out_port
+        self.address      = args.address
+
+        showArgs(args)
+
+    
     def record(self, chunk_size, stream):
         """Record a chunk from the stream into a buffer.
 
@@ -70,7 +75,7 @@ class InterCom():
         stream.write(chunk)
 
     def client(self):
-        stream = sd.RawStream(samplerate=self.FRAMES_PER_SECOND, channels=self.NUMBER_OF_CHANNELS, dtype='int16')
+        stream = sd.RawStream(samplerate=self.frames_per_second, channels=self.number_of_channels, dtype='int16')
         stream.start()
         with UdpReceiver() as receiver:
             while True:
@@ -81,20 +86,27 @@ class InterCom():
                 self.lock.release()
 
     def server(self):
-        stream = sd.RawStream(samplerate=self.FRAMES_PER_SECOND, channels=self.NUMBER_OF_CHANNELS, dtype='int16')
+        stream = sd.RawStream(samplerate=self.frames_per_second, channels=self.number_of_channels, dtype='int16')
         stream.start()
         with UdpSender() as sender:
             while True:
                 self.lock.acquire()
-                chunk = self.record(self.FRAMES_PER_CHUNK, stream)
+                chunk = self.record(self.frames_per_chunk, stream)
                 self.lock.release()
                 packed_chunk = self.pack(chunk)
-                sender.send(packed_chunk, self.OUT_PORT, self.ADDRESS)
+                sender.send(packed_chunk, self.out_port, self.address)
+
+    
+
 
 if __name__ == "__main__":
-    intercom = InterCom()
+    # Get args
+    parser = disponible_args()
+    args = parser.parse_args()
+    # Start the program
+    intercom = InterCom(args)
+    # Threads
     clientT = threading.Thread(target=intercom.client)
     serverT = threading.Thread(target=intercom.server)
-
     clientT.start()
     serverT.start()
