@@ -140,3 +140,5 @@ cython_debug/
 .vscode/
 Scripts/
 pyvenv.cfg
+share/
+etc/
