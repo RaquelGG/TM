@@ -59,16 +59,12 @@ def play(self, chunk, stream):
 
 ## Cosas a destacar sobre la implementación
 Se ha usado la biblioteca [`sounddevice`](https://python-sounddevice.readthedocs.io/en/0.4.1/) para la captura y reproducción del audio.
-### RawInputStream y RawOutputStream
-[`RawInputStrea`](https://python-sounddevice.readthedocs.io/en/0.4.1/api/raw-streams.html#sounddevice.RawInputStream) gestiona los dispositivos de entrada de nuestro dispositivo y [`RawOutputStrea`](https://python-sounddevice.readthedocs.io/en/0.4.1/api/raw-streams.html#sounddevice.RawOutputStream) los de salida.
-```python
-stream = sd.RawInputStream(samplerate=self.frames_per_second, channels=self.number_of_channels, dtype='int16')
-...
-stream = sd.RawOutputStream(samplerate=self.frames_per_second, channels=self.number_of_channels, dtype='int16')
-```
-Como tratamos la entrada y la salida totalmente por separado, no es necesario realizar exclusión mutua.
 
 ### Hilos
+El programa tiene 2 tareas principales e independientes:
+1. Grabar audio y enviarlo por internet.
+1. Recibir audio de la red y reproducirlo.
+
 Usamos la biblioteca [`threading`](https://docs.python.org/3.8/library/threading.html) que construye interfaces de subprocesamiento de nivel superior sobre el módulo `_thread` de nivel inferior.
 
 ```python
@@ -77,3 +73,14 @@ import threading
 clientT = threading.Thread(target=intercom.client)
 clientT.start()
 ```
+
+### RawInputStream y RawOutputStream
+[`RawInputStream`](https://python-sounddevice.readthedocs.io/en/0.4.1/api/raw-streams.html#sounddevice.RawInputStream) gestiona los dispositivos de entrada de nuestro dispositivo y [`RawOutputStream`](https://python-sounddevice.readthedocs.io/en/0.4.1/api/raw-streams.html#sounddevice.RawOutputStream) los de salida.
+Son “raw” (crudo en inglés) porque envían y reciben datos directamente en buffers de python, en lugar de utilizar `numpy`.
+```python
+stream = sd.RawInputStream(samplerate=self.frames_per_second, channels=self.number_of_channels, dtype='int16')
+...
+stream = sd.RawOutputStream(samplerate=self.frames_per_second, channels=self.number_of_channels, dtype='int16')
+```
+Como tratamos la entrada y la salida totalmente por separado, no es necesario realizar exclusión mutua.
+
