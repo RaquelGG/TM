@@ -15,9 +15,9 @@ class UdpReceiver():
 
     def receive(self, payload_size):
         """Receive a datagram."""
-        (message, from_addr) = self.sock.recvfrom(payload_size)
-        print(f"received {message} from {from_addr}")
-        return message
+        (packed_chunk, from_addr) = self.sock.recvfrom(payload_size)
+        print(f"received {packed_chunk} from {from_addr}")
+        return packed_chunk
     
     def __exit__(self,ext_type,exc_value,traceback):
         """Close the socket."""

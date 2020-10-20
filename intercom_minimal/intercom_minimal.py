@@ -100,9 +100,6 @@ class InterCom():
                 packed_chunk = self.pack(chunk)
                 sender.send(packed_chunk, self.out_port, self.address)
 
-    
-
-
 if __name__ == "__main__":
     # Get args
     parser = disponible_args()
