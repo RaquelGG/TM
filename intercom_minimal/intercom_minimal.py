@@ -2,7 +2,7 @@ import sounddevice as sd
 import threading
 from udp_send import UdpSender
 from udp_receive import UdpReceiver
-from disponible_args import disponible_args, show_args
+from args import get_args, show_args
 #import numpy # Por ahora no usaremos numpy porque no le sacaremos provecho
 #assert numpy
 
@@ -95,7 +95,7 @@ class InterCom():
 
 if __name__ == "__main__":
     # Get args
-    parser = disponible_args()
+    parser = get_args()
     args = parser.parse_args()
     # Start the program
     intercom = InterCom(args)

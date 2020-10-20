@@ -1,6 +1,6 @@
 import argparse
 
-def disponible_args():
+def get_args():
     # Audio defaults
     # 1 = mono, 2 = stereo
     NUMBER_OF_CHANNELS = 2
