@@ -18,7 +18,7 @@ class UdpReceiver():
 
 
 ### Métodos y variables
-Los nombres de los métodos y las instancias de las variables usan "_" (barrabaja) entre las palabras, siendo el número de estas las necesarias para su comprensión. En el caso de los métodos y varibales no públicas se usará una única "_". Generalmente solo se usarán dos "_" para evitar conflictos de nombres con los atributos de las clases que han sido creadas para ser subclases. 
+Los nombres de los métodos y las instancias de las variables usan `_` (barrabaja) entre las palabras, siendo el número de estas las necesarias para su comprensión. En el caso de los métodos y varibales no públicas se usará una única `_`. Generalmente solo se usarán dos `__` para evitar conflictos de nombres con los atributos de las clases que han sido creadas para ser subclases. 
 ```python
 def disponible_args():
     NUMBER_OF_CHANNELS = 2
